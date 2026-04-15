@@ -160,17 +160,19 @@
             <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;" id="refillGrid"></div>
         </div>
 
-        <div class="page-footer" style="padding: 20px 36px; background: var(--gray-50); display:flex; justify-content: space-between; align-items:center;">
-            <div style="display:flex; gap:15px; font-size:10px; font-weight:700;">
-                <span>LEYENDA:</span>
-                <span><span style="color:var(--green)">✓</span> Tomada</span>
-                <span><span style="color:var(--rose)">✗</span> Saltada</span>
-                <span><span>⬜</span> Pendiente</span>
-            </div>
-            <div style="text-align:right;">
-                <label style="font-size:9px; font-weight:800; color:var(--teal);">FIRMA DEL CUIDADOR</label><br>
-                <input type="text" placeholder="Firme aquí..." style="border:none; border-bottom:1px solid #ccc; background:transparent; font-style:italic;">
-            </div>
+        <div class="page-footer">
+    <div class="footer-legend">
+        <div class="legend-item"><div class="legend-box done"></div> Tomada</div>
+        <div class="legend-item"><div class="legend-box skip"></div> Saltada</div>
+        <div class="legend-item"><div class="legend-box empty"></div> Pendiente</div>
+    </div>
+    
+    <div class="footer-sig">
+        <label>Firma del Cuidador o Paciente</label>
+        <input type="text" placeholder="Escribe o firma aquí...">
+        </div>
+    </div>
+            <div style="text-
         </div>
     </div>
 
