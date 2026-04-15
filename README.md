@@ -1,5 +1,4 @@
 <html lang="es">
-<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -25,7 +24,7 @@
             --white: #ffffff; --border: #dde8ea; --shadow: 0 2px 16px rgba(58,158,165,0.10);
         }
 
-        * { margin:0; padding:0; box-sizing:border-box; }
+        * { margin:0; padding:10; box-sizing:border-box; }
         body { font-family: 'Nunito', sans-serif; background: #ecf4f5; color: var(--gray-800); min-height: 100vh; padding: 24px 16px 48px; }
 
         /* Estilos de Botones y Diseño (Se mantienen igual para no romper la estética) */
@@ -160,59 +159,20 @@
             <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;" id="refillGrid"></div>
         </div>
 
-        /* ── FOOTER CORREGIDO PARA MÓVIL ── */
-.page-footer {
-    background: var(--gray-50);
-    border-top: 1.5px solid var(--gray-200);
-    padding: 20px 24px;
-    display: flex;
-    flex-direction: column; /* Apila los elementos uno bajo otro */
-    gap: 20px;
-}
-
-.footer-legend {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    padding-bottom: 15px;
-    border-bottom: 1px dashed var(--gray-200);
-}
-
-.footer-sig {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centra la firma */
-    gap: 8px;
-    width: 100%;
-}
-
-.footer-sig label {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--teal);
-}
-
-.footer-sig input {
-    font-family: 'Merriweather', serif;
-    font-style: italic;
-    font-size: 16px; /* Más grande para que el iPhone no haga zoom raro */
-    border: none;
-    border-bottom: 2px solid var(--teal-mid);
-    background: transparent;
-    outline: none;
-    width: 80%; /* Ancho cómodo para el dedo/lápiz */
-    text-align: center;
-    color: var(--gray-800);
-    padding: 8px 0;
-}div class="page-footer">
-    <div class="footer-legend">
-        <div class="legend-item"><div class="legend-box done"></div> Tomada</div>
-        <div class="legend-item"><div class="legend-box skip"></div> Saltada</div>
-        <div class="legend-item"><div class="legend-box empty"></div> Pendiente</div>
+        <div class="page-footer" style="padding: 20px 36px; background: var(--gray-50); display:flex; justify-content: space-between; align-items:center;">
+            <div style="display:flex; gap:15px; font-size:10px; font-weight:700;">
+                <span>LEYENDA:</span>
+                <span><span style="color:var(--green)">✓</span> Tomada</span>
+                <span><span style="color:var(--rose)">✗</span> Saltada</span>
+                <span><span>⬜</span> Pendiente</span>
+            </div>
+            <div style="text-align:right;">
+                <label style="font-size:9px; font-weight:800; color:var(--teal);">FIRMA DEL CUIDADOR</label><br>
+                <input type="text" placeholder="Firme aquí..." style="border:none; border-bottom:1px solid #ccc; background:transparent; font-style:italic;">
+            </div>
+        </div>
     </div>
+
     <script>
         // Lógica de programación (Se mantiene en inglés para compatibilidad, pero el contenido es español)
         let meds = [{ name:'', dose:'', route:'', prescriber:'', notes:'', times:[] }];
