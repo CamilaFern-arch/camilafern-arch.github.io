@@ -2,11 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Planner Médico 💊</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Mi Planner 💊</title>
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Mi Planner 💊">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/822/822143.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Merriweather:ital,wght@1,700&display=swap" rel="stylesheet">
@@ -16,20 +17,23 @@
             --teal: #3a9ea5;
             --teal-light: #ecf4f5;
             --gray-800: #1e293b;
+            --gray-500: #64748b;
             --gray-200: #e2e8f0;
+            --gray-50: #f8fafc;
             --white: #ffffff;
+            --red: #ef4444;
+            --green: #22c55e;
         }
 
-        /* OCULTAR CABECERA DE GITHUB */
+        /* OCULTAR CABECERA GITHUB Y AJUSTE SUPERIOR */
         header, #banner, .gh-header { display: none !important; }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f0f4f8;
-            padding: 0;
-            margin: 0;
+            color: var(--gray-800);
+            padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom) 0; /* Ajuste para notch de iPhone */
         }
 
         .page {
@@ -37,91 +41,151 @@
             margin: 0 auto;
             background: var(--white);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* TOOLBAR */
+        /* TOOLBAR FIJO */
         .toolbar {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 5px;
             padding: 10px;
             background: #f8fafc;
+            border-bottom: 1px solid var(--gray-200);
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
         .toolbar button {
-            padding: 8px 2px;
+            padding: 8px 3px;
             border-radius: 8px;
             border: 1px solid var(--gray-200);
             font-size: 11px;
             font-weight: 600;
             background: white;
+            cursor: pointer;
         }
+        .toolbar button:active { transform: scale(0.98); }
 
         /* HEADER */
         .page-header {
             background: linear-gradient(135deg, var(--teal), #5ba9b0);
             color: white;
-            padding: 30px 20px;
+            padding: 25px 20px;
         }
 
-        h1 { font-size: 22px; font-weight: 800; }
+        h1 { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
         .input-row { display: flex; gap: 10px; margin-top: 15px; }
         .input-group { flex: 1; }
-        .input-group label { font-size: 9px; text-transform: uppercase; font-weight: 800; display: block; margin-bottom: 3px; }
+        .input-group label { font-size: 9px; text-transform: uppercase; font-weight: 800; display: block; margin-bottom: 3px; opacity: 0.8; }
         .input-group input {
             width: 100%;
             background: rgba(255,255,255,0.2);
             border: 1px solid rgba(255,255,255,0.3);
             border-radius: 6px;
-            padding: 6px;
+            padding: 7px;
             color: white;
             font-size: 13px;
+            outline: none;
         }
 
-        /* TABLA DE MEDICACIÓN */
-        .table-container { overflow-x: auto; padding: 15px 5px; }
-        table { width: 100%; border-collapse: collapse; min-width: 500px; }
-        th { font-size: 10px; text-transform: uppercase; padding: 8px; background: var(--teal-light); color: var(--teal); border: 1px solid #d1e5e7; }
-        td { border: 1px solid var(--gray-200); padding: 5px; }
+        /* TABLA INTERACTIVA */
+        .table-container { overflow-x: auto; padding: 15px 5px; flex-grow: 1; }
+        table { width: 100%; border-collapse: collapse; min-width: 550px; }
+        th { font-size: 10px; text-transform: uppercase; padding: 10px 5px; background: var(--teal-light); color: var(--teal); border: 1px solid #d1e5e7; text-align: center; }
+        th:first-child { width: 220px; text-align: left; padding-left: 15px; }
         
-        .med-input { width: 100%; border: none; font-size: 12px; font-weight: 600; outline: none; }
-        .dose-input { width: 100%; border: none; font-size: 10px; color: #64748b; outline: none; }
+        td { border: 1px solid var(--gray-200); padding: 5px; vertical-align: middle; }
+        
+        /* Contenedor Nombre/Dosis */
+        .med-meta { display: flex; flex-direction: column; gap: 2px; }
+        .med-input { width: 100%; border: none; font-size: 13px; font-weight: 600; outline: none; padding: 2px; }
+        .dose-input { width: 100%; border: none; font-size: 11px; color: var(--gray-500); outline: none; padding: 2px; }
 
-        /* CIRCULOS DE CHECK */
+        /* Botón Borrar Fila */
+        .delete-row-btn {
+            border: none;
+            background: none;
+            color: var(--red);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 5px;
+            display: none; /* Oculto por defecto */
+        }
+        .editing .delete-row-btn { display: inline-block; } /* Visible al editar */
+
+        /* CIRCULOS DE CHECK MEJORADOS */
         .check-cell {
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             border: 2px solid var(--gray-200);
             margin: auto;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
         }
-        .check-cell.taken { background-color: #dcfce7; border-color: #22c55e; position: relative; }
-        .check-cell.taken::after { content: '✓'; color: #166534; position: absolute; left: 6px; top: 2px; font-weight: bold; }
         
-        .check-cell.skipped { background-color: #fee2e2; border-color: #ef4444; position: relative; }
-        .check-cell.skipped::after { content: '✕'; color: #991b1b; position: absolute; left: 7px; top: 2px; font-weight: bold; }
+        /* Estado: Tomada */
+        .check-cell.taken {
+            background-color: #dcfce7;
+            border-color: var(--green);
+            color: #166534;
+        }
+        .check-cell.taken::after { content: '✓'; }
+        
+        /* Estado: Saltada */
+        .check-cell.skipped {
+            background-color: #fee2e2;
+            border-color: var(--red);
+            color: #991b1b;
+        }
+        .check-cell.skipped::after { content: '✕'; }
 
-        /* SECCIONES INFERIORES */
+        /* BOTÓN AÑADIR */
+        .add-med-section { padding: 10px 20px; text-align: center; }
+        .add-med-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--white);
+            border: 2px dashed var(--teal-mid);
+            border-radius: 10px;
+            color: var(--teal);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .add-med-btn:active { background-color: var(--teal-light); }
+
+        /* SECCIONES DE NOTAS */
         .section { padding: 15px 20px; border-top: 8px solid #f0f4f8; }
-        .section-title { font-size: 11px; font-weight: 800; color: var(--teal); text-transform: uppercase; margin-bottom: 8px; }
-        textarea { width: 100%; border: 1px solid var(--gray-200); border-radius: 8px; padding: 10px; font-size: 13px; font-family: inherit; }
+        .section-title { font-size: 11px; font-weight: 800; color: var(--teal); text-transform: uppercase; margin-bottom: 10px; }
+        textarea { width: 100%; border: 1px solid var(--gray-200); border-radius: 10px; padding: 10px; font-size: 14px; font-family: inherit; color: var(--gray-800); }
 
         /* FOOTER FIRMA */
-        .page-footer { padding: 30px 20px; background: #f8fafc; text-align: center; }
-        .footer-sig { border-top: 1px dashed var(--gray-200); pt: 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .page-footer { padding: 30px 20px 50px 20px; background: #f8fafc; text-align: center; }
+        .footer-sig { border-top: 1px dashed var(--gray-200); padding-top: 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
         .footer-sig label { font-size: 10px; font-weight: 800; color: var(--teal); text-transform: uppercase; }
         .footer-sig input { 
             font-family: 'Merriweather', serif; font-style: italic; font-size: 18px; 
             border: none; border-bottom: 2px solid var(--teal); background: transparent; 
-            width: 80%; text-align: center; outline: none; padding: 5px;
+            width: 85%; text-align: center; outline: none; padding: 8px; color: var(--gray-800);
         }
 
-        @media print { .toolbar { display: none; } }
+        /* LEYENDA TÁCTIL */
+        .legend-mobile {
+            display: flex; justify-content: center; gap: 15px; font-size: 11px; font-weight: 600; margin-top: 15px; color: var(--gray-500);
+        }
+        .legend-item { display: flex; align-items: center; gap: 4px; }
+        .l-box { width: 10px; height: 10px; border-radius: 2px; }
+
+        @media print { .toolbar, .add-med-section { display: none; } .page { box-shadow: none; } }
     </style>
 </head>
 <body>
@@ -129,17 +193,17 @@
 <div class="page">
     <div class="toolbar">
         <button onclick="window.print()">🖨️ Imprimir</button>
-        <button onclick="saveData()" style="background: #e0f2fe;">💾 Guardar</button>
+        <button onclick="saveData()" style="background: #e0f2fe; border-color: #bae6fd;">💾 Guardar</button>
         <button onclick="loadData()">📂 Cargar</button>
-        <button onclick="resetData()" style="color: red;">↺ Borrar</button>
+        <button id="toggle-edit-btn" onclick="toggleEditMode()" style="color: var(--red);">✕ Borrar Filas</button>
     </div>
 
     <div class="page-header">
-        <h1>Planner de Medicación</h1>
+        <h1><span>💊</span> Planner de Medicación</h1>
         <div class="input-row">
             <div class="input-group">
                 <label>Semana del</label>
-                <input type="text" id="weekDate" placeholder="7 - 13 Abr">
+                <input type="text" id="weekDate" placeholder="Ej. 7 - 13 Abr">
             </div>
             <div class="input-group">
                 <label>Responsable</label>
@@ -149,7 +213,7 @@
     </div>
 
     <div class="table-container">
-        <table>
+        <table id="med-table">
             <thead>
                 <tr>
                     <th>Medicación / Dosis</th>
@@ -161,14 +225,18 @@
         </table>
     </div>
 
+    <div class="add-med-section">
+        <button class="add-med-btn" onclick="addMedRow()">＋ Añadir Medicamento</button>
+    </div>
+
     <div class="section">
-        <div class="section-title">👤 Información del Paciente</div>
-        <textarea id="patientInfo" rows="2"></textarea>
+        <div class="section-title">👤 Información del Paciente (Alergias, etc.)</div>
+        <textarea id="patientInfo" rows="3"></textarea>
     </div>
 
     <div class="section" style="background: #fff5f5;">
-        <div class="section-title" style="color: #c53030;">⚠️ Dosis Olvidadas / Motivo</div>
-        <textarea id="missedDoses" rows="2"></textarea>
+        <div class="section-title" style="color: #c53030;">⚠️ Dosis Olvidadas / Motivo / Incidencias</div>
+        <textarea id="missedDoses" rows="3"></textarea>
     </div>
 
     <div class="page-footer">
@@ -176,45 +244,113 @@
             <label>Firma del Cuidador / Paciente</label>
             <input type="text" id="signature" placeholder="Firme aquí...">
         </div>
+        <div class="legend-mobile">
+            <div class="legend-item"><div class="l-box" style="background:#dcfce7; border:1px solid #22c55e;"></div> 1 toque</div>
+            <div class="legend-item"><div class="l-box" style="background:#fee2e2; border:1px solid #ef4444;"></div> 2 toques</div>
+        </div>
     </div>
 </div>
 
 <script>
-    // Generar las filas de la tabla
     const body = document.getElementById('med-body');
-    for (let i = 0; i < 6; i++) {
-        let tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>
-                <input type="text" class="med-input" placeholder="Medicina ${i+1}">
-                <input type="text" class="dose-input" placeholder="Dosis/Hora">
-            </td>
-            ${Array(7).fill().map(() => `<td><div class="check-cell" onclick="toggleCheck(this)"></div></td>`).join('')}
+    const table = document.getElementById('med-table');
+    let editMode = false;
+
+    // Función para crear una nueva fila vacía
+    function createMedRow(data = null) {
+        const tr = document.createElement('tr');
+        
+        // Columna 1: Nombre, Dosis y Botón Borrar
+        let metaTD = document.createElement('td');
+        metaTD.innerHTML = `
+            <div style="display:flex; align-items:center; gap:8px;">
+                <button class="delete-row-btn" onclick="removeMedRow(this)">✕</button>
+                <div class="med-meta" style="flex:1;">
+                    <input type="text" class="med-input" placeholder="Nombre Medicina" value="${data ? data.name : ''}">
+                    <input type="text" class="dose-input" placeholder="Dosis y Hora" value="${data ? data.dose : ''}">
+                </div>
+            </div>
         `;
-        body.appendChild(tr);
+        tr.appendChild(metaTD);
+
+        // Columnas 2-8: Lunes a Domingo (checks)
+        for (let j = 0; j < 7; j++) {
+            let td = document.createElement('td');
+            let checkDiv = document.createElement('div');
+            checkDiv.className = 'check-cell';
+            
+            // Si cargamos datos, aplicar estado
+            if (data && data.checks) {
+                if (data.checks[j] === 'T') checkDiv.classList.add('taken');
+                if (data.checks[j] === 'S') checkDiv.classList.add('skipped');
+            }
+            
+            checkDiv.onclick = function() { toggleCheck(this); };
+            td.appendChild(checkDiv);
+            tr.appendChild(td);
+        }
+        
+        return tr;
     }
 
-    function toggleCheck(el) {
-        if (!el.classList.contains('taken') && !el.classList.contains('skipped')) {
-            el.classList.add('taken');
-        } else if (el.classList.contains('taken')) {
-            el.classList.replace('taken', 'skipped');
+    // Añadir fila manualmente con el botón
+    function addMedRow() {
+        body.appendChild(createMedRow());
+        // Desactivar modo borrar si estaba activo
+        if(editMode) toggleEditMode(); 
+    }
+
+    // Borrar una fila específica
+    function removeMedRow(btn) {
+        const tr = btn.closest('tr');
+        tr.remove();
+    }
+
+    // Activar/Desactivar modo borrar filas
+    function toggleEditMode() {
+        editMode = !editMode;
+        const btn = document.getElementById('toggle-edit-btn');
+        if (editMode) {
+            table.classList.add('editing');
+            btn.textContent = '✓ Finalizar Borrado';
+            btn.style.color = 'var(--green)';
         } else {
-            el.classList.remove('skipped');
+            table.classList.remove('editing');
+            btn.textContent = '✕ Borrar Filas';
+            btn.style.color = 'var(--red)';
         }
     }
 
+    // Lógica táctil de los checks (Cíclica)
+    function toggleCheck(el) {
+        if (editMode) return; // No marcar si estamos borrando filas
+
+        if (!el.classList.contains('taken') && !el.classList.contains('skipped')) {
+            el.classList.add('taken'); // 1er toque: Verde
+        } else if (el.classList.contains('taken')) {
+            el.classList.replace('taken', 'skipped'); // 2º toque: Rojo
+        } else {
+            el.classList.remove('skipped'); // 3er toque: Gris (Vacío)
+        }
+    }
+
+    // GUARDAR DATOS
     function saveData() {
-        const rows = [];
+        // Asegurarse de salir del modo borrar antes de guardar
+        if(editMode) toggleEditMode(); 
+
+        const medRows = [];
         document.querySelectorAll('#med-body tr').forEach(tr => {
-            const checks = Array.from(tr.querySelectorAll('.check-cell')).map(c => 
-                c.classList.contains('taken') ? 'T' : c.classList.contains('skipped') ? 'S' : 'E'
-            );
-            rows.push({
-                name: tr.querySelector('.med-input').value,
-                dose: tr.querySelector('.dose-input').value,
-                checks: checks
-            });
+            const name = tr.querySelector('.med-input').value;
+            const dose = tr.querySelector('.dose-input').value;
+            
+            // Solo guardar si hay nombre de medicina
+            if (name.trim() !== "") {
+                const checks = Array.from(tr.querySelectorAll('.check-cell')).map(c => 
+                    c.classList.contains('taken') ? 'T' : c.classList.contains('skipped') ? 'S' : 'E'
+                );
+                medRows.push({ name, dose, checks });
+            }
         });
 
         const data = {
@@ -223,44 +359,49 @@
             patientInfo: document.getElementById('patientInfo').value,
             missedDoses: document.getElementById('missedDoses').value,
             signature: document.getElementById('signature').value,
-            meds: rows
+            meds: medRows
         };
-        localStorage.setItem('medDataFull', JSON.stringify(data));
-        alert('Guardado en el móvil ✅');
+        localStorage.setItem('medPlanner_v3', JSON.stringify(data));
+        alert('¡Planner guardado en tu móvil! 💾✅');
     }
 
+    // CARGAR DATOS
     function loadData() {
-        const saved = localStorage.getItem('medDataFull');
-        if (!saved) return;
+        const saved = localStorage.getItem('medPlanner_v3');
+        if (!saved) {
+            // Si no hay datos, generar 3 filas vacías por defecto
+            for (let i = 0; i < 3; i++) body.appendChild(createMedRow());
+            return;
+        }
+        
         const data = JSON.parse(saved);
         
+        // Cargar campos de texto
         document.getElementById('weekDate').value = data.weekDate || '';
         document.getElementById('caregiver').value = data.caregiver || '';
         document.getElementById('patientInfo').value = data.patientInfo || '';
         document.getElementById('missedDoses').value = data.missedDoses || '';
         document.getElementById('signature').value = data.signature || '';
 
-        const trs = document.querySelectorAll('#med-body tr');
-        data.meds.forEach((m, i) => {
-            if (trs[i]) {
-                trs[i].querySelector('.med-input').value = m.name;
-                trs[i].querySelector('.dose-input').value = m.dose;
-                const cells = trs[i].querySelectorAll('.check-cell');
-                m.checks.forEach((status, j) => {
-                    if (status === 'T') cells[j].classList.add('taken');
-                    if (status === 'S') cells[j].classList.add('skipped');
-                });
-            }
-        });
+        // Limpiar tabla actual y cargar medicinas guardadas
+        body.innerHTML = '';
+        if (data.meds && data.meds.length > 0) {
+            data.meds.forEach(m => body.appendChild(createMedRow(m)));
+        } else {
+            // Si no hay medicinas guardadas, poner 3 vacías
+            for (let i = 0; i < 3; i++) body.appendChild(createMedRow());
+        }
     }
 
+    // REINICIAR TODO
     function resetData() {
-        if(confirm('¿Borrar todo?')) {
-            localStorage.removeItem('medDataFull');
+        if(confirm('¿Seguro que quieres borrar todo el contenido y empezar de cero?')) {
+            localStorage.removeItem('medPlanner_v3');
             location.reload();
         }
     }
 
+    // Cargar automáticamente al abrir la página
     window.onload = loadData;
 </script>
 
