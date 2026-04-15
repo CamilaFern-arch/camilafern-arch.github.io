@@ -160,22 +160,59 @@
             <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;" id="refillGrid"></div>
         </div>
 
-        <div class="page-footer">
+        /* ── FOOTER CORREGIDO PARA MÓVIL ── */
+.page-footer {
+    background: var(--gray-50);
+    border-top: 1.5px solid var(--gray-200);
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column; /* Apila los elementos uno bajo otro */
+    gap: 20px;
+}
+
+.footer-legend {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed var(--gray-200);
+}
+
+.footer-sig {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra la firma */
+    gap: 8px;
+    width: 100%;
+}
+
+.footer-sig label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--teal);
+}
+
+.footer-sig input {
+    font-family: 'Merriweather', serif;
+    font-style: italic;
+    font-size: 16px; /* Más grande para que el iPhone no haga zoom raro */
+    border: none;
+    border-bottom: 2px solid var(--teal-mid);
+    background: transparent;
+    outline: none;
+    width: 80%; /* Ancho cómodo para el dedo/lápiz */
+    text-align: center;
+    color: var(--gray-800);
+    padding: 8px 0;
+}div class="page-footer">
     <div class="footer-legend">
         <div class="legend-item"><div class="legend-box done"></div> Tomada</div>
         <div class="legend-item"><div class="legend-box skip"></div> Saltada</div>
         <div class="legend-item"><div class="legend-box empty"></div> Pendiente</div>
     </div>
-    
-    <div class="footer-sig">
-        <label>Firma del Cuidador o Paciente</label>
-        <input type="text" placeholder="Escribe o firma aquí...">
-        </div>
-    </div>
-            <div style="text-
-        </div>
-    </div>
-
     <script>
         // Lógica de programación (Se mantiene en inglés para compatibilidad, pero el contenido es español)
         let meds = [{ name:'', dose:'', route:'', prescriber:'', notes:'', times:[] }];
